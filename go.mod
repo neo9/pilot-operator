@@ -18,6 +18,7 @@ require (
 	github.com/gregjones/httpcache v0.0.0-20180305231024-9cad4c3443a7 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.8.5 // indirect
 	github.com/imdario/mergo v0.3.6 // indirect
+	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/operator-framework/operator-sdk v0.8.1-0.20190621163125-c2b49e8f6a0e
 	github.com/pborman/uuid v0.0.0-20180906182336-adf5a7427709 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
