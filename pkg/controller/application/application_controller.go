@@ -6,7 +6,6 @@ import (
 	pilotv1alpha1 "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
@@ -49,7 +48,6 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
-	// TODO(user): Modify this to be the types you create that are owned by the primary resource
 	// Watch for changes to secondary resource Deployment and requeue the owner Application
 	err = c.Watch(&source.Kind{Type: &appsv1.Deployment{}}, &handler.EnqueueRequestForOwner{
 		IsController: true,
@@ -75,8 +73,6 @@ type ReconcileApplication struct {
 
 // Reconcile reads that state of the cluster for a Application object and makes changes based on the state read
 // and what is in the Application.Spec
-// TODO(user): Modify this Reconcile function to implement your Controller logic.  This example creates
-// a Pod as an example
 // Note:
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
@@ -98,35 +94,11 @@ func (r *ReconcileApplication) Reconcile(request reconcile.Request) (reconcile.R
 		return reconcile.Result{}, err
 	}
 
-	// Check if this Deployment already exists
-	found := &appsv1.Deployment{}
-	err = r.client.Get(context.TODO(), types.NamespacedName{Name: application.Name, Namespace: application.Namespace}, found)
-	if err != nil && errors.IsNotFound(err) {
-		reqLogger.Info("Creating a new Deployment", "Deployment.Namespace", application.Namespace, "Deployment.Name", application.Name)
-		dep := r.newDeploymentForCR(application)
-		err = r.client.Create(context.TODO(), dep)
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-
-		// Deployment created successfully - don't requeue
-		return reconcile.Result{}, nil
-	} else if err != nil {
-		return reconcile.Result{}, err
+	// Loop for deployment
+	result, err := r.DeploymentReconcile(request, application)
+	if err != nil {
+		return result, err
 	}
 
-	// Check for changes
-	if isUpdated(found, application) {
-		err = r.client.Update(context.TODO(), found)
-		if err != nil {
-			reqLogger.Error(err, "Could not update the deployment")
-			return reconcile.Result{}, err
-		}
-
-		reqLogger.Info("Skip reconcile: Deployment updated", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
-		return reconcile.Result{Requeue: true}, nil
-	}
-
-	reqLogger.Info("Skip reconcile: Deployment already exists", "Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
-	return reconcile.Result{}, nil
+	return result, nil
 }

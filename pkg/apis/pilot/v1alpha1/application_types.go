@@ -17,6 +17,24 @@ type ApplicationSecret struct {
 	Key string `json:"key"`
 }
 
+type ApplicationPod struct {
+	Secrets []ApplicationSecret `json:"secrets"`
+}
+
+type ApplicationHealthCheck struct {
+	Path string `json:"path"`
+}
+
+type ApplicationResources struct {
+	Memory string `json:"memory"`
+	CPU string `json:"cpu"`
+}
+
+type ApplicationService struct {
+	Port int32 `json:"port"`
+	TargetPort int32 `json:"targetPort"`
+}
+
 // ApplicationSpec defines the desired state of Application
 // +k8s:openapi-gen=true
 // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
@@ -27,7 +45,11 @@ type ApplicationSpec struct {
 	Type ApplicationType `json:"type"`
 	Repository string `json:"repository"`
 	Tag string `json:"tag"`
-	Secrets []ApplicationSecret `json:"secrets"`
+	InitTag string `json:"initTag"`
+	Service ApplicationService `json:"service"`
+	Resources ApplicationResources `json:"resources"`
+	HealthCheck ApplicationHealthCheck `json:"healthCheck"`
+	Pod ApplicationPod `json:"pod"`
 }
 
 // ApplicationStatus defines the observed state of Application

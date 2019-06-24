@@ -33,20 +33,66 @@ spec:
             type:
               type: string
             replicas:
-              type: integer
+              anyOf:
+              - type: null
+              - type: integer
             repository:
               type: string
+            initTag:
+              anyOf:
+              - type: null
+              - type: string
             tag:
-              type: string
-            secrets:
-              type: array
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  key:
-                    type: string
+              anyOf:
+              - type: null
+              - type: string
+            healthCheck:
+              anyOf:
+              - type: null
+              - type: object
+              properties:
+                path:
+                  anyOf:
+                  - type: null
+                  - type: string
+            service:
+              anyOf:
+              - type: null
+              - type: object
+              properties:
+                targetPort:
+                  anyOf:
+                    - type: null
+                    - type: integer
+                port:
+                  anyOf:
+                    - type: null
+                    - type: integer
+            resources:
+              anyOf:
+              - type: null
+              - type: object
+              properties:
+                memory:
+                  type: string
+                cpu:
+                  type: string
+            pod:
+              anyOf:
+              - type: null
+              - type: object
+              properties:
+                secrets:
+                  anyOf:
+                  - type: null
+                  - type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      key:
+                        type: string
         status:
           type: object
   version: v1alpha1
