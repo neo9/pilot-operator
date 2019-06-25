@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pilot-operator
-  namespace: integration
 spec:
   replicas: 1
   selector:
@@ -17,7 +16,7 @@ spec:
       containers:
         - name: pilot-operator
           # Replace this with the built image name
-          image: 423202242239.dkr.ecr.eu-west-1.amazonaws.com/pilot-operator:latest
+          image: TO_BE_DEFINED
           command:
           - pilot-operator
           imagePullPolicy: Always
