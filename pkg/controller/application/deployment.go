@@ -2,15 +2,15 @@ package application
 
 import (
 	pilotv1alpha1 "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	appsv1 "k8s.io/api/apps/v1"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-func  (r *ReconcileApplication) newDeploymentForCR(application *pilotv1alpha1.Application) *appsv1.Deployment {
+func (r *ReconcileApplication) newDeploymentForCR(application *pilotv1alpha1.Application) *appsv1.Deployment {
 	dep := getDeployment(application)
 	controllerutil.SetControllerReference(application, dep, r.scheme)
 	return dep
@@ -18,7 +18,7 @@ func  (r *ReconcileApplication) newDeploymentForCR(application *pilotv1alpha1.Ap
 
 func getDeployment(application *pilotv1alpha1.Application) *appsv1.Deployment {
 	labels := map[string]string{
-		"app": application.Name,
+		"app":        application.Name,
 		"controller": "pilot",
 	}
 
@@ -27,7 +27,7 @@ func getDeployment(application *pilotv1alpha1.Application) *appsv1.Deployment {
 		replicas = application.Spec.Replicas
 	}
 
-	dep :=  &appsv1.Deployment{
+	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      application.Name,
 			Namespace: application.ObjectMeta.Namespace,
@@ -57,28 +57,28 @@ func getDeploymentContainers(application *pilotv1alpha1.Application) []corev1.Co
 
 	return []corev1.Container{
 		{
-			Name:    application.Name,
-			Image:   application.Spec.Repository + ":" + getDeploymentTag(application),
-			Env: getDeploymentContainerEnvs(application),
-			ReadinessProbe: &probe,
-			LivenessProbe: probe.DeepCopy(),
+			Name:            application.Name,
+			Image:           application.Spec.Repository + ":" + getDeploymentTag(application),
+			Env:             getDeploymentContainerEnvs(application),
+			ReadinessProbe:  &probe,
+			LivenessProbe:   probe.DeepCopy(),
 			ImagePullPolicy: corev1.PullIfNotPresent,
-			Resources: getDeploymentResources(application),
-			Ports: getDeploymentPorts(application),
+			Resources:       getDeploymentResources(application),
+			Ports:           getDeploymentPorts(application),
 		},
 	}
 }
 
 func getDeploymentPorts(application *pilotv1alpha1.Application) []corev1.ContainerPort {
-	var port int32 = 0
+	var port int32 = 80
 	if application.Spec.Service.TargetPort != 0 {
 		port = application.Spec.Service.TargetPort
 	}
 
 	return []corev1.ContainerPort{
 		{
-			Protocol: corev1.ProtocolTCP,
-			Name: "http",
+			Protocol:      corev1.ProtocolTCP,
+			Name:          "http",
 			ContainerPort: port,
 		},
 	}
@@ -101,22 +101,27 @@ func getDeploymentProbe(application *pilotv1alpha1.Application) corev1.Probe {
 		path = "/health"
 	}
 
+	var initialDelaySeconds int32 = 3
+	if application.Spec.Type == pilotv1alpha1.JAVA {
+		initialDelaySeconds = 30
+	}
+
 	return corev1.Probe{
 		Handler: corev1.Handler{
 			HTTPGet: &corev1.HTTPGetAction{
-				Path:  path,
-				Port:  intstr.IntOrString{
-					Type: intstr.Int,
+				Path: path,
+				Port: intstr.IntOrString{
+					Type:   intstr.Int,
 					IntVal: port,
 				},
 				Scheme: "HTTP",
 			},
 		},
-		FailureThreshold: 3,
-		InitialDelaySeconds: 30,
-		PeriodSeconds: 8,
-		SuccessThreshold: 1,
-		TimeoutSeconds: 1,
+		FailureThreshold:    3,
+		InitialDelaySeconds: initialDelaySeconds,
+		PeriodSeconds:       8,
+		SuccessThreshold:    1,
+		TimeoutSeconds:      1,
 	}
 }
 
@@ -148,7 +153,7 @@ func getDeploymentResources(application *pilotv1alpha1.Application) corev1.Resou
 
 	return corev1.ResourceRequirements{
 		Requests: corev1.ResourceList{
-			"cpu": resource.MustParse(resources.CPU),
+			"cpu":    resource.MustParse(resources.CPU),
 			"memory": resource.MustParse(resources.Memory),
 		},
 		Limits: corev1.ResourceList{
@@ -164,7 +169,7 @@ func getDeploymentContainerEnvs(application *pilotv1alpha1.Application) []corev1
 		ValueFrom: &corev1.EnvVarSource{
 			FieldRef: &corev1.ObjectFieldSelector{
 				APIVersion: "v1",
-				FieldPath: "metadata.namespace",
+				FieldPath:  "metadata.namespace",
 			},
 		},
 	}
@@ -174,7 +179,7 @@ func getDeploymentContainerEnvs(application *pilotv1alpha1.Application) []corev1
 		envs = append(envs, corev1.EnvVar{
 			Name: secret.Key,
 			ValueFrom: &corev1.EnvVarSource{
-				SecretKeyRef:  &corev1.SecretKeySelector{
+				SecretKeyRef: &corev1.SecretKeySelector{
 					LocalObjectReference: corev1.LocalObjectReference{Name: secret.Name},
 					Key:                  secret.Key,
 				},

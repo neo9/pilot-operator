@@ -1,0 +1,36 @@
+language: go
+go_import_path: github.com/neo9/pilot-operator
+sudo: required
+cache:
+  directories:
+    - "$HOME/.cache/go-build"
+    - "$GOPATH/pkg/mod"
+    - "$HOME/google-cloud-sdk/"
+
+services:
+  - docker
+
+go:
+  - 1.12.x
+
+env:
+  - GO111MODULE="on"
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_755c7d74675b_key -iv $encrypted_755c7d74675b_iv -in ci/sa.json.enc -out ci/sa.json -d
+
+install:
+  - "./ci/install_operator_sdk.sh"
+  - "./ci/install_gcloud.sh"
+  - "./ci/install_kubectl.sh"
+
+script:
+  - go mod vendor
+  - operator-sdk build operator
+  - gcloud auth activate-service-account $GOOGLE_SA_EMAIL --key-file=$(pwd)/ci/sa.json --project=$GOOGLE_PROJECT
+  - gcloud container clusters get-credentials pilot-operator-test-cluster --zone europe-west1-c --project $GOOGLE_PROJECT
+  - kubectl get namespaces
+  - "./ci/tests.sh"
+  # PUSH image
+  # - "./ci/tests_e2e.sh"
+

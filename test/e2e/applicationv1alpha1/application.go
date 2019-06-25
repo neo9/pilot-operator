@@ -15,15 +15,19 @@ func GetSampleNginxApplication(namespace string) v1alpha1.Application {
 	return v1alpha1.Application{
 		TypeMeta: getTypeMeta(),
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "nginx",
+			Name:      "default-backend",
 			Namespace: namespace,
 		},
 		Spec: v1alpha1.ApplicationSpec{
-			Replicas:   1,
 			Type:       v1alpha1.WEB,
-			Secrets:    []v1alpha1.ApplicationSecret{},
-			Repository: "nginx",
-			Tag:        "latest",
+			Repository: "k8s.gcr.io/defaultbackend-amd64",
+			InitTag:    "1.5",
+			HealthCheck: v1alpha1.ApplicationHealthCheck{
+				Path: "/healthz",
+			},
+			Service: v1alpha1.ApplicationService{
+				TargetPort: 8080,
+			},
 		},
 	}
 }

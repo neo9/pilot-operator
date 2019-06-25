@@ -16,7 +16,7 @@ spec:
       containers:
         - name: pilot-operator
           # Replace this with the built image name
-          image: TO_BE_DEFINED
+          image: operator:latest
           command:
           - pilot-operator
           imagePullPolicy: Always
