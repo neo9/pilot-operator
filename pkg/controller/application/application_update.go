@@ -34,6 +34,18 @@ func isUpdated(current *appsv1.Deployment, application *pilotv1alpha1.Applicatio
 		stateModifications++
 	}
 
+	if !reflect.DeepEqual(stateContainer.Resources, currentContainer.Resources) {
+		log.Info(
+			fmt.Sprintf("Resources should be updated: CPU (%s -> %s), Memory (%s -> %s)",
+				currentContainer.Resources.Requests.Cpu().String(),
+				stateContainer.Resources.Requests.Cpu().String(),
+				currentContainer.Resources.Requests.Memory().String(),
+				stateContainer.Resources.Requests.Memory().String(),
+			))
+		currentContainer.Resources = stateContainer.Resources
+		stateModifications++
+	}
+
 	if !reflect.DeepEqual(stateContainer.Env, currentContainer.Env) {
 		log.Info("Containers env variables differs")
 		currentContainer.Env = stateContainer.Env
