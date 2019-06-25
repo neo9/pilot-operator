@@ -10,7 +10,7 @@ import (
 )
 
 func (r *ReconcileApplication) DeploymentReconcile(request reconcile.Request, application *pilotv1alpha1.Application) (reconcile.Result, error) {
-	reqLogger := log.WithValues("ApplicationKind", "deployment", "Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger := log.WithValues("ApplicationKind", "Deployment", "Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	// Check if this Deployment already exists
 	found := &appsv1.Deployment{}
 	err := r.client.Get(context.TODO(), types.NamespacedName{Name: application.Name, Namespace: application.Namespace}, found)
@@ -28,7 +28,7 @@ func (r *ReconcileApplication) DeploymentReconcile(request reconcile.Request, ap
 	}
 
 	// Check for changes
-	if isUpdated(found, application) {
+	if isDeploymentUpdated(found, application) {
 		err = r.client.Update(context.TODO(), found)
 		if err != nil {
 			reqLogger.Error(err, "Could not update the deployment")

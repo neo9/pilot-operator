@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	v1 "k8s.io/api/core/v1"
 
 	pilotv1alpha1 "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -57,6 +58,14 @@ func add(mgr manager.Manager, r reconcile.Reconciler) error {
 		return err
 	}
 
+	err = c.Watch(&source.Kind{Type: &v1.Service{}}, &handler.EnqueueRequestForOwner{
+		IsController: true,
+		OwnerType:    &pilotv1alpha1.Application{},
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -96,6 +105,11 @@ func (r *ReconcileApplication) Reconcile(request reconcile.Request) (reconcile.R
 
 	// Loop for deployment
 	result, err := r.DeploymentReconcile(request, application)
+	if err != nil {
+		return result, err
+	}
+
+	result, err = r.ServiceReconcile(request, application)
 	if err != nil {
 		return result, err
 	}

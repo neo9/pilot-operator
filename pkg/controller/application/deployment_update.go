@@ -7,7 +7,7 @@ import (
 	"reflect"
 )
 
-func isUpdated(current *appsv1.Deployment, application *pilotv1alpha1.Application) bool {
+func isDeploymentUpdated(current *appsv1.Deployment, application *pilotv1alpha1.Application) bool {
 	stateModifications := 0
 	state := getDeployment(application)
 
@@ -24,6 +24,12 @@ func isUpdated(current *appsv1.Deployment, application *pilotv1alpha1.Applicatio
 	if stateContainer.Image != currentContainer.Image {
 		log.Info(fmt.Sprintf("Image should be updated: %s -> %s", currentContainer.Image, stateContainer.Image))
 		currentContainer.Image = stateContainer.Image
+		stateModifications++
+	}
+
+	if len(currentContainer.Ports) == 0 || stateContainer.Ports[0].ContainerPort != currentContainer.Ports[0].ContainerPort {
+		log.Info(fmt.Sprintf("Ports should be updated to %d", stateContainer.Ports[0].ContainerPort))
+		currentContainer.Ports = stateContainer.Ports
 		stateModifications++
 	}
 

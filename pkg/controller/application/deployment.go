@@ -64,8 +64,24 @@ func getDeploymentContainers(application *pilotv1alpha1.Application) []corev1.Co
 			LivenessProbe: probe.DeepCopy(),
 			ImagePullPolicy: corev1.PullIfNotPresent,
 			Resources: getDeploymentResources(application),
+			Ports: getDeploymentPorts(application),
 		},
-	};
+	}
+}
+
+func getDeploymentPorts(application *pilotv1alpha1.Application) []corev1.ContainerPort {
+	var port int32 = 0
+	if application.Spec.Service.TargetPort != 0 {
+		port = application.Spec.Service.TargetPort
+	}
+
+	return []corev1.ContainerPort{
+		{
+			Protocol: corev1.ProtocolTCP,
+			Name: "http",
+			ContainerPort: port,
+		},
+	}
 }
 
 func getDeploymentProbe(application *pilotv1alpha1.Application) corev1.Probe {

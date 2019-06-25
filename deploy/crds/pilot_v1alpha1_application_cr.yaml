@@ -1,8 +1,0 @@
-apiVersion: pilot.neo9.fr/v1alpha1
-kind: Application
-metadata:
-  name: example-application
-  namespace: default
-spec:
-  # Add fields here
-  replicas: 1

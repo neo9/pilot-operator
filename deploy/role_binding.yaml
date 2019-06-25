@@ -2,6 +2,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: pilot-operator
+  namespace: integration
 subjects:
 - kind: ServiceAccount
   name: pilot-operator
