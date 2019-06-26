@@ -6,7 +6,7 @@ Kubernetes operator to manage and deploy Java, NodeJS and web applications.
 
 [API documentation](doc/api.md)
 
-**Work still in progress**. Use at your own risk.
+[Docker image on Docker Hub](https://hub.docker.com/r/neo9sas/pilot-operator)
 
 ## Requirements
 
