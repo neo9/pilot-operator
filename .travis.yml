@@ -1,38 +1,38 @@
 language: go
 go_import_path: github.com/neo9/pilot-operator
 sudo: required
+
 cache:
   directories:
-    - "$HOME/.cache/go-build"
-    - "$GOPATH/pkg/mod"
-    - "$HOME/google-cloud-sdk/"
+  - "$HOME/.cache/go-build"
+  - "$GOPATH/pkg/mod"
+  - "$HOME/google-cloud-sdk/"
 
 services:
-  - docker
+- docker
 
 go:
-  - 1.12.x
+- 1.12.x
 
 env:
-  - GO111MODULE="on"
+- GO111MODULE="on"
 
 before_install:
-  - openssl aes-256-cbc -K $encrypted_755c7d74675b_key -iv $encrypted_755c7d74675b_iv -in ci/sa.json.enc -out ci/sa.json -d
+- openssl aes-256-cbc -K $encrypted_755c7d74675b_key -iv $encrypted_755c7d74675b_iv
+  -in ci/sa.json.enc -out ci/sa.json -d
 
 install:
-  - "./ci/install_operator_sdk.sh"
-  - "./ci/install_gcloud.sh"
-  - "./ci/install_kubectl.sh"
+- "./ci/install_operator_sdk.sh"
+- "./ci/install_gcloud.sh"
+- "./ci/install_kubectl.sh"
 
 script:
-  - set -e;
-    go mod vendor;
-    operator-sdk build neo9sas/pilot-operator:latest;
-    gcloud auth activate-service-account $GOOGLE_SA_EMAIL --key-file=$(pwd)/ci/sa.json --project=$GOOGLE_PROJECT;
-    gcloud container clusters get-credentials pilot-operator-test-cluster --zone europe-west1-c --project $GOOGLE_PROJECT;
-    kubectl get namespaces;
-    "./ci/tests.sh";
-    "./ci/push.sh";
-    "./ci/tests_e2e.sh";
-    "./ci/push_release.sh";
+- set -e; go mod vendor; operator-sdk build neo9sas/pilot-operator:latest; gcloud
+  auth activate-service-account $GOOGLE_SA_EMAIL --key-file=$(pwd)/ci/sa.json --project=$GOOGLE_PROJECT;
+  gcloud container clusters get-credentials pilot-operator-test-cluster --zone europe-west1-c
+  --project $GOOGLE_PROJECT; kubectl get namespaces; "./ci/tests.sh"; "./ci/push.sh";
+  "./ci/tests_e2e.sh"; "./ci/push_release.sh";
 
+notifications:
+  slack:
+    secure: EueBDimtiOKi9jRnn3F3UcF6jvKlMpCfDjn1vwS0XQvoZkeSHTPX+O5TGjbSsD9mTWV0xkqFIFYwgWxd4Ht0+1UH6yxji/56IempcBR6sWLi4PVXT2uizQmM5UTaeJgHlHxI7JhoByosBE3J4NzEkMK7gB4JMufRphMnJGyPvEcCzOx34HbA19R3xQgf6r/n88XgIqFy2wHreX6XUjnBKre0FuO2SwDk+PWmK43AN3wU5YWbA8t0ol8G/o0unFF/9u1dgHJ6U55zbRe5jIYFx/MqmkFYNIHfoOl90o5lvdq+8zixMIp6rhG16THmPH8fsOHZ1tUmWg/g6BNUJLjrigCoSQMfUv17I6EkESvFxxmkK1MHo0ic3euGb9vuE8Ws+QlsEcIhkCv/hmOt/1TrqOY8vYCLH7L+ahBJ00te1mutM7VkRhRV6OJ/VqeUiYbG8fH5SRajSREBqzg21FyOEewgWgJf3KYWzHa5vXRG+VRfSXrHxX4mmjipingPe7gdUiHYBwve70P7axoggKrARWCcjHanlyw7i6dHaI8dW2EtxDOfmuW0zAbbFhf2FDUvmc9gZbyop1w9x+RI+41Yfy/0+BulPsDbrqOB6Fyl9Gtkp9lqZdBl8/Xae9RR6L25u7SgQ6mrTYkrKCQ+1/075Blks8Io7TkXqXP90Q+oqhc=
