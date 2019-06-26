@@ -11,7 +11,7 @@ func GetSampleList() v1alpha1.ApplicationList {
 	}
 }
 
-func GetSampleNginxApplication(namespace string) v1alpha1.Application {
+func GetSampleWebApplication(namespace string) v1alpha1.Application {
 	return v1alpha1.Application{
 		TypeMeta: getTypeMeta(),
 		ObjectMeta: metav1.ObjectMeta{

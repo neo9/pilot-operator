@@ -19,8 +19,8 @@ var (
 	cleanupTimeout       = time.Second * 5
 )
 
-func TestSimple(t *testing.T) {
-	t.Logf("Testing nginx pod creation")
+func TestSimpleWeb(t *testing.T) {
+	t.Logf("Testing web pod creation")
 	sampleList := applicationv1alpha1.GetSampleList()
 	//noinspection GoTypesCompatibility
 	crdError := test.AddToFrameworkScheme(apis.AddToScheme, &sampleList)
@@ -40,30 +40,26 @@ func TestSimple(t *testing.T) {
 	}
 	// get global framework variables
 	f := test.Global
-	// wait for operator to be ready
 	err = e2eutil.WaitForOperatorDeployment(t, f.KubeClient, namespace, "pilot-operator", 1, retryInterval, timeout)
 	if err != nil {
 		t.Fatal(err)
 	}
-	application := applicationv1alpha1.GetSampleNginxApplication(namespace)
-	//noinspection GoTypesCompatibility
+	application := applicationv1alpha1.GetSampleWebApplication(namespace)
 	err = f.Client.Create(context.TODO(), &application, &test.CleanupOptions{TestContext: ctx, Timeout: timeout, RetryInterval: retryInterval})
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = e2eutil.WaitForDeployment(t, f.KubeClient, namespace, "nginx", 1, time.Second*5, time.Second*30)
+	err = e2eutil.WaitForDeployment(t, f.KubeClient, namespace, application.Name, 1, time.Second*5, time.Second*30)
 
 	application.Spec.Replicas = 4
-	//noinspection GoTypesCompatibility
 	err = f.Client.Update(context.TODO(), &application)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = e2eutil.WaitForDeployment(t, f.KubeClient, namespace, "nginx", 4, time.Second*5, time.Second*30)
-
+	err = e2eutil.WaitForDeployment(t, f.KubeClient, namespace, application.Name, 4, time.Second*5, time.Second*30)
 	if err != nil {
 		t.Fatal(err)
 	}
