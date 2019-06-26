@@ -8,6 +8,7 @@ import (
 )
 
 func isDeploymentUpdated(current *appsv1.Deployment, application *pilotv1alpha1.Application) bool {
+	reqLogger := getLogger(application.Namespace, application.Name, "Deployment")
 	stateModifications := 0
 	state := getDeployment(application)
 
@@ -22,13 +23,13 @@ func isDeploymentUpdated(current *appsv1.Deployment, application *pilotv1alpha1.
 	currentContainer := &current.Spec.Template.Spec.Containers[0]
 
 	if stateContainer.Image != currentContainer.Image {
-		log.Info(fmt.Sprintf("Image should be updated: %s -> %s", currentContainer.Image, stateContainer.Image))
+		reqLogger.Info(fmt.Sprintf("Image should be updated: %s -> %s", currentContainer.Image, stateContainer.Image))
 		currentContainer.Image = stateContainer.Image
 		stateModifications++
 	}
 
 	if len(currentContainer.Ports) == 0 || stateContainer.Ports[0].ContainerPort != currentContainer.Ports[0].ContainerPort {
-		log.Info(fmt.Sprintf("Ports should be updated to %d", stateContainer.Ports[0].ContainerPort))
+		reqLogger.Info(fmt.Sprintf("Ports should be updated to %d", stateContainer.Ports[0].ContainerPort))
 		currentContainer.Ports = stateContainer.Ports
 		stateModifications++
 	}
@@ -41,7 +42,7 @@ func isDeploymentUpdated(current *appsv1.Deployment, application *pilotv1alpha1.
 	}
 
 	if !reflect.DeepEqual(stateContainer.Resources, currentContainer.Resources) {
-		log.Info(
+		reqLogger.Info(
 			fmt.Sprintf("Resources should be updated: CPU (%s -> %s), Memory (%s -> %s)",
 				currentContainer.Resources.Requests.Cpu().String(),
 				stateContainer.Resources.Requests.Cpu().String(),
@@ -53,7 +54,7 @@ func isDeploymentUpdated(current *appsv1.Deployment, application *pilotv1alpha1.
 	}
 
 	if !reflect.DeepEqual(stateContainer.Env, currentContainer.Env) {
-		log.Info("Containers env variables differs")
+		reqLogger.Info("Containers env variables differs")
 		currentContainer.Env = stateContainer.Env
 		stateModifications++
 	}

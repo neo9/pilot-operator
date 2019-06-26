@@ -10,7 +10,7 @@ import (
 )
 
 func (r *ReconcileApplication) DeploymentReconcile(request reconcile.Request, application *pilotv1alpha1.Application) (reconcile.Result, error) {
-	reqLogger := log.WithValues("ApplicationKind", "Deployment", "Request.Namespace", request.Namespace, "Request.Name", request.Name)
+	reqLogger := getLogger(request.Namespace, request.Namespace, "Deployment")
 	// Check if this Deployment already exists
 	found := &appsv1.Deployment{}
 	err := r.client.Get(context.TODO(), types.NamespacedName{Name: application.Name, Namespace: application.Namespace}, found)
