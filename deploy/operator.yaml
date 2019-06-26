@@ -15,8 +15,8 @@ spec:
       serviceAccountName: pilot-operator
       containers:
         - name: pilot-operator
-          # Replace this with the built image name
-          image: operator:latest
+          # Do not use latest and check for latest release tag
+          image: neo9sas/pilot-operator:latest
           command:
           - pilot-operator
           imagePullPolicy: Always

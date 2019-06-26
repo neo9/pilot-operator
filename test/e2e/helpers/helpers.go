@@ -25,7 +25,6 @@ func GetClusterContext(t *testing.T) (string, *test.TestCtx) {
 		t.Fatalf("failed to add custom resource scheme to framework: %v", crdError)
 	}
 	ctx := test.NewTestCtx(t)
-	defer ctx.Cleanup()
 	crError := ctx.InitializeClusterResources(&test.CleanupOptions{
 		TestContext: ctx,
 		Timeout: CleanupTimeout,

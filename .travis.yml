@@ -25,12 +25,13 @@ install:
   - "./ci/install_kubectl.sh"
 
 script:
-  - go mod vendor
-  - operator-sdk build operator
-  - gcloud auth activate-service-account $GOOGLE_SA_EMAIL --key-file=$(pwd)/ci/sa.json --project=$GOOGLE_PROJECT
-  - gcloud container clusters get-credentials pilot-operator-test-cluster --zone europe-west1-c --project $GOOGLE_PROJECT
-  - kubectl get namespaces
-  - "./ci/tests.sh"
-  # PUSH image
-  # - "./ci/tests_e2e.sh"
+  - set -e;
+    go mod vendor;
+    operator-sdk build neo9sas/pilot-operator:latest;
+    gcloud auth activate-service-account $GOOGLE_SA_EMAIL --key-file=$(pwd)/ci/sa.json --project=$GOOGLE_PROJECT;
+    gcloud container clusters get-credentials pilot-operator-test-cluster --zone europe-west1-c --project $GOOGLE_PROJECT;
+    kubectl get namespaces;
+    "./ci/tests.sh";
+    "./ci/push.sh";
+    "./ci/tests_e2e.sh";
 

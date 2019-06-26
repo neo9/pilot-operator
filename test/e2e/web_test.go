@@ -14,6 +14,7 @@ import (
 
 func TestSimpleWeb(t *testing.T) {
 	namespace, ctx := helpers.GetClusterContext(t)
+
 	// get global framework variables
 	f := test.Global
 	application := applicationv1alpha1.GetSampleWebApplication(namespace)
@@ -38,4 +39,5 @@ func TestSimpleWeb(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	ctx.Cleanup()
 }
