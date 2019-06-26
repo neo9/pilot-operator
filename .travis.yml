@@ -34,4 +34,5 @@ script:
     "./ci/tests.sh";
     "./ci/push.sh";
     "./ci/tests_e2e.sh";
+    "./ci/push_release.sh";
 

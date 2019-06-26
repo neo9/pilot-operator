@@ -10,3 +10,4 @@ echo "Master branch detected. Pushing latest image"
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin
 docker push neo9sas/pilot-operator:latest
+
