@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-namespace="pilot-op-test-$(git rev-parse --short HEAD)"
+namespace="test-$(git rev-parse --short HEAD)-${TRAVIS_BRANCH}${TRAVIS_TAG}"
 
 kubectl create namespace $namespace
 operator-sdk test local ./test/e2e --up-local --namespace $namespace
