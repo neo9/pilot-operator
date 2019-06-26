@@ -6,7 +6,7 @@ if [ $TRAVIS_BRANCH != 'master' ]; then
 fi
 
 
-namespace="test-2e2-$(git rev-parse --short HEAD)-${TRAVIS_BRANCH}${TRAVIS_TAG}"
+namespace="test-e2e-$(git rev-parse --short HEAD)-$TRAVIS_BUILD_ID"
 
 kubectl create namespace $namespace
 operator-sdk test local ./test/e2e --namespace $namespace
