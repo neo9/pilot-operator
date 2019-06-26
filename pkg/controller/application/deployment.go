@@ -85,7 +85,7 @@ func getDeploymentPorts(application *pilotv1alpha1.Application) []corev1.Contain
 }
 
 func getDeploymentProbe(application *pilotv1alpha1.Application) corev1.Probe {
-	var port int32 = 80
+	var port int32 = 8080
 	if application.Spec.Service.TargetPort != 0 {
 		port = application.Spec.Service.TargetPort
 	} else if application.Spec.Service.Port != 0 {
