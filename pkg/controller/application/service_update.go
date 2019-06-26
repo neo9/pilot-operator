@@ -7,11 +7,12 @@ import (
 )
 
 func isServiceUpdated(current *v1.Service, application *pilotv1alpha1.Application) bool {
+	reqLogger := getLogger(application.Namespace, application.Name, "Service")
 	stateModifications := 0
 	state := getService(application)
 
 	if !reflect.DeepEqual(state.Spec.Ports, current.Spec.Ports) {
-		log.Info("Service ports should be updated")
+		reqLogger.Info("Service ports should be updated")
 		current.Spec.Ports = state.Spec.Ports
 		stateModifications++
 	}

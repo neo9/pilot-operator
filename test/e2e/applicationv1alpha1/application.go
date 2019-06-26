@@ -25,9 +25,6 @@ func GetSampleWebApplication(namespace string) v1alpha1.Application {
 			HealthCheck: v1alpha1.ApplicationHealthCheck{
 				Path: "/healthz",
 			},
-			Service: v1alpha1.ApplicationService{
-				TargetPort: 8080,
-			},
 		},
 	}
 }
@@ -45,6 +42,9 @@ func GetSampleNginxApplication(namespace string, version string) v1alpha1.Applic
 			InitTag:    version,
 			HealthCheck: v1alpha1.ApplicationHealthCheck{
 				Path: "/",
+			},
+			Service: v1alpha1.ApplicationService{
+				TargetPort: 80,
 			},
 		},
 	}
