@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 
-namespace="pilot-op-test-2e2-$(git rev-parse --short HEAD)"
+if [ $TRAVIS_BRANCH != 'master' ]; then
+  echo "Not on master branch, no e2e possible"
+  exit 0
+fi
+
+namespace="test-2e2-$(git rev-parse --short HEAD)"
 
 kubectl create namespace $namespace
 operator-sdk test local ./test/e2e --namespace $namespace
