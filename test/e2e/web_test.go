@@ -14,6 +14,7 @@ import (
 
 func TestSimpleWeb(t *testing.T) {
 	namespace, ctx := helpers.GetClusterContext(t)
+	defer ctx.Cleanup()
 
 	// get global framework variables
 	f := test.Global

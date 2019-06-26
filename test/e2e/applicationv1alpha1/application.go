@@ -32,6 +32,24 @@ func GetSampleWebApplication(namespace string) v1alpha1.Application {
 	}
 }
 
+func GetSampleNginxApplication(namespace string, version string) v1alpha1.Application {
+	return v1alpha1.Application{
+		TypeMeta: getTypeMeta(),
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "nginx",
+			Namespace: namespace,
+		},
+		Spec: v1alpha1.ApplicationSpec{
+			Type:       v1alpha1.WEB,
+			Repository: "nginx",
+			InitTag:    version,
+			HealthCheck: v1alpha1.ApplicationHealthCheck{
+				Path: "/",
+			},
+		},
+	}
+}
+
 func getTypeMeta() metav1.TypeMeta {
 	return metav1.TypeMeta{
 		Kind:       "Application",
