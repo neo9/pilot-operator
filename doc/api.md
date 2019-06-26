@@ -29,7 +29,7 @@ Application describes a common JAVA, NodeJS or Web application
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
-| targetPort | Pod http port pod to expose. Default `80` | int32 | false |
+| targetPort | Pod http port pod to expose. Default `8080` | int32 | false |
 | port | Service http port .Default `80` | int32 | false |
 
 ## ApplicationResources

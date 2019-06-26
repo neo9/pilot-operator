@@ -50,7 +50,7 @@ func getPort(applicationSpec pilotv1alpha1.ApplicationSpec) int32 {
 }
 
 func getTargetPort(applicationSpec pilotv1alpha1.ApplicationSpec) intstr.IntOrString {
-	var targetPort int32 = 80
+	var targetPort int32 = 8080
 	if applicationSpec.Service.TargetPort != 0 {
 		targetPort = applicationSpec.Service.TargetPort
 	}

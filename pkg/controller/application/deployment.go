@@ -70,7 +70,7 @@ func getDeploymentContainers(application *pilotv1alpha1.Application) []corev1.Co
 }
 
 func getDeploymentPorts(application *pilotv1alpha1.Application) []corev1.ContainerPort {
-	var port int32 = 80
+	var port int32 = 8080
 	if application.Spec.Service.TargetPort != 0 {
 		port = application.Spec.Service.TargetPort
 	}
