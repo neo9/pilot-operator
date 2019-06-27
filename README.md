@@ -57,12 +57,30 @@ did not meet our needs.
 
 ## Pilot operator deployment
 
+With kubectl:
+
 ```bash
 git clone https://github.com/neo9/pilot-operator
 cd pilot-operator/deploy
 kubectl -n [namespace] apply -f ./crds
 kubectl -n [namespace] apply -f ./
 ```
+
+With Helm:
+
+```bash
+helm repo add n9 https://n9-charts.storage.googleapis.com
+helm upgrade -i \
+  --namespace integration \
+  pilot n9/pilot-operator
+
+# If you are deploying a second instance, crd are already created
+# You can use --no-crd-hook instead
+helm install --no-crd-hook \
+  --namespace another-namespace \
+  --name pilot n9/pilot-operator
+```
+
 
 ## Examples
 
