@@ -10,7 +10,7 @@ import (
 )
 
 func (r *ReconcileApplication) ServiceReconcile(request reconcile.Request, application *pilotv1alpha1.Application) (reconcile.Result, error) {
-	reqLogger := getLogger(request.Namespace, request.Namespace, "Service")
+	reqLogger := getLogger(request.Namespace, request.Name, "Service")
 	// Check if this Deployment already exists
 	found := &v1.Service{}
 	err := r.client.Get(context.TODO(), types.NamespacedName{Name: application.Name, Namespace: application.Namespace}, found)
@@ -36,7 +36,7 @@ func (r *ReconcileApplication) ServiceReconcile(request reconcile.Request, appli
 		}
 
 		reqLogger.Info("Skip reconcile: Service updated", "Service.Namespace", found.Namespace, "Service.Name", found.Name)
-		return reconcile.Result{Requeue: true}, nil
+		return reconcile.Result{}, nil
 	}
 
 	reqLogger.Info("Skip reconcile: Service already exists", "Service.Namespace", found.Namespace, "Service.Name", found.Name)

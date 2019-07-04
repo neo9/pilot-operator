@@ -22,7 +22,7 @@ func getService(application *pilotv1alpha1.Application) *v1.Service {
 
 	return &v1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      application.Name,
+			Name:      getServiceName(application),
 			Namespace: application.ObjectMeta.Namespace,
 			Labels:    labels,
 		},
@@ -31,8 +31,8 @@ func getService(application *pilotv1alpha1.Application) *v1.Service {
 			Ports: []v1.ServicePort{
 				{
 					Name: "http",
-					Port: getPort(application.Spec),
-					TargetPort: getTargetPort(application.Spec),
+					Port: getServicePort(application.Spec),
+					TargetPort: getServiceTargetPort(application.Spec),
 					Protocol: v1.ProtocolTCP,
 				},
 			},
@@ -41,7 +41,11 @@ func getService(application *pilotv1alpha1.Application) *v1.Service {
 	}
 }
 
-func getPort(applicationSpec pilotv1alpha1.ApplicationSpec) int32 {
+func getServiceName(application *pilotv1alpha1.Application) string {
+	return application.Name
+}
+
+func getServicePort(applicationSpec pilotv1alpha1.ApplicationSpec) int32 {
 	if applicationSpec.Service.Port != 0 {
 		return applicationSpec.Service.Port
 	}
@@ -49,7 +53,7 @@ func getPort(applicationSpec pilotv1alpha1.ApplicationSpec) int32 {
 	return 80
 }
 
-func getTargetPort(applicationSpec pilotv1alpha1.ApplicationSpec) intstr.IntOrString {
+func getServiceTargetPort(applicationSpec pilotv1alpha1.ApplicationSpec) intstr.IntOrString {
 	var targetPort int32 = 8080
 	if applicationSpec.Service.TargetPort != 0 {
 		targetPort = applicationSpec.Service.TargetPort

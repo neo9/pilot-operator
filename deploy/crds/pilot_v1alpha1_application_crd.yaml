@@ -77,6 +77,25 @@ spec:
                   type: string
                 cpu:
                   type: string
+            cronjobs:
+              anyOf:
+                - type: null
+                - type: object
+              properties:
+                requests:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      path:
+                        type: string
+                      method:
+                        enum: ['get', 'post', 'put', 'patch', 'delete']
+                        anyOf:
+                          - type: null
+                          - type: string
             pod:
               anyOf:
               - type: null

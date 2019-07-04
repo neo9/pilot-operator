@@ -5,6 +5,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 
 	pilotv1alpha1 "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
+	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -14,7 +15,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
-	appsv1 "k8s.io/api/apps/v1"
 )
 
 var log = logf.Log.WithName("controller_application")
@@ -95,15 +95,18 @@ func (r *ReconcileApplication) Reconcile(request reconcile.Request) (reconcile.R
 	if err != nil {
 		if errors.IsNotFound(err) {
 			reqLogger.Info("Cannot find application. Could have been deleted after reconcile request")
-			// Owned objects are automatically garbage collected. For additional cleanup logic use finalizers.
-			// Return and don't requeue
 			return reconcile.Result{}, nil
 		}
-		// Error reading the object - requeue the request.
 		return reconcile.Result{}, err
 	}
 
-	// Loop for deployment
+	if len(application.Spec.CronJob.Requests) > 0 {
+		result, err := r.CronJobReconcile(request, application)
+		if err != nil {
+			return result, err
+		}
+	}
+
 	result, err := r.DeploymentReconcile(request, application)
 	if err != nil {
 		return result, err

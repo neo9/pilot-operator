@@ -12,6 +12,17 @@ const (
 	NODEJS = "nodejs"
 )
 
+type ApplicationCronJobRequest struct {
+	Name string `json:"name"`
+	Method string `json:"method"`
+	Path string `json:"path"`
+	Schedule string `json:"schedule"`
+}
+
+type ApplicationCronJob struct {
+	Requests []ApplicationCronJobRequest `json:"requests"`
+}
+
 type ApplicationSecret struct {
 	Name string `json:"name"`
 	Key string `json:"key"`
@@ -50,6 +61,7 @@ type ApplicationSpec struct {
 	Resources ApplicationResources `json:"resources"`
 	HealthCheck ApplicationHealthCheck `json:"healthCheck"`
 	Pod ApplicationPod `json:"pod"`
+	CronJob ApplicationCronJob `json:"cronjob"`
 }
 
 // ApplicationStatus defines the observed state of Application
