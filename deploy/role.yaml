@@ -1,6 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
+  creationTimestamp: null
   name: pilot-operator
 rules:
 - apiGroups:
@@ -49,5 +50,6 @@ rules:
   - pilot.neo9.fr
   resources:
   - '*'
+  - schedulers
   verbs:
   - '*'

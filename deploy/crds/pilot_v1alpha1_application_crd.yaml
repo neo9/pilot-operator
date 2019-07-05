@@ -28,71 +28,75 @@ spec:
         metadata:
           type: object
         spec:
-          type: object
           properties:
-            type:
-              type: string
-            replicas:
-              anyOf:
-              - type: null
-              - type: integer
-            repository:
-              type: string
-            initTag:
-              anyOf:
-              - type: null
-              - type: string
-            tag:
-              anyOf:
-              - type: null
-              - type: string
             healthCheck:
-              anyOf:
-              - type: null
-              - type: object
               properties:
                 path:
-                  anyOf:
-                  - type: null
-                  - type: string
-            service:
-              anyOf:
-              - type: null
-              - type: object
-              properties:
-                targetPort:
-                  anyOf:
-                    - type: null
-                    - type: integer
-                port:
-                  anyOf:
-                    - type: null
-                    - type: integer
-            resources:
-              anyOf:
-              - type: null
-              - type: object
-              properties:
-                memory:
                   type: string
-                cpu:
-                  type: string
+              required:
+              - path
+              type: object
+            initTag:
+              type: string
             pod:
-              anyOf:
-              - type: null
-              - type: object
               properties:
                 secrets:
-                  anyOf:
-                  - type: null
-                  - type: array
                   items:
-                    type: object
                     properties:
-                      name:
-                        type: string
                       key:
                         type: string
+                      name:
+                        type: string
+                    required:
+                    - name
+                    - key
+                    type: object
+                  type: array
+              required:
+              - secrets
+              type: object
+            replicas:
+              format: int32
+              type: integer
+            repository:
+              type: string
+            resources:
+              properties:
+                cpu:
+                  type: string
+                memory:
+                  type: string
+              required:
+              - memory
+              - cpu
+              type: object
+            service:
+              properties:
+                port:
+                  format: int32
+                  type: integer
+                targetPort:
+                  format: int32
+                  type: integer
+              required:
+              - port
+              - targetPort
+              type: object
+            tag:
+              type: string
+            type:
+              type: string
+          required:
+          - replicas
+          - type
+          - repository
+          - tag
+          - initTag
+          - service
+          - resources
+          - healthCheck
+          - pod
+          type: object
         status:
           type: object
   version: v1alpha1

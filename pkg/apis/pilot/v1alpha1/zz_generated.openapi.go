@@ -14,6 +14,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.Application":       schema_pkg_apis_pilot_v1alpha1_Application(ref),
 		"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationSpec":   schema_pkg_apis_pilot_v1alpha1_ApplicationSpec(ref),
 		"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationStatus": schema_pkg_apis_pilot_v1alpha1_ApplicationStatus(ref),
+		"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.Scheduler":         schema_pkg_apis_pilot_v1alpha1_Scheduler(ref),
+		"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.SchedulerSpec":     schema_pkg_apis_pilot_v1alpha1_SchedulerSpec(ref),
+		"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.SchedulerStatus":   schema_pkg_apis_pilot_v1alpha1_SchedulerStatus(ref),
 	}
 }
 
@@ -64,11 +67,64 @@ func schema_pkg_apis_pilot_v1alpha1_ApplicationSpec(ref common.ReferenceCallback
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ApplicationSpec defines the desired state of Application",
-				Properties:  map[string]spec.Schema{},
+				Description: "ApplicationSpec defines the desired state of Application INSERT ADDITIONAL SPEC FIELDS - desired state of cluster Important: Run \"operator-sdk generate k8s\" to regenerate code after modifying this file Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html",
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"repository": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"tag": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"initTag": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"service": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationService"),
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationResources"),
+						},
+					},
+					"healthCheck": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationHealthCheck"),
+						},
+					},
+					"pod": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationPod"),
+						},
+					},
+				},
+				Required: []string{"replicas", "type", "repository", "tag", "initTag", "service", "resources", "healthCheck", "pod"},
 			},
 		},
-		Dependencies: []string{},
+		Dependencies: []string{
+			"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationHealthCheck", "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationPod", "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationResources", "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.ApplicationService"},
 	}
 }
 
@@ -77,6 +133,73 @@ func schema_pkg_apis_pilot_v1alpha1_ApplicationStatus(ref common.ReferenceCallba
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "ApplicationStatus defines the observed state of Application",
+				Properties:  map[string]spec.Schema{},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_pkg_apis_pilot_v1alpha1_Scheduler(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Scheduler is the Schema for the schedulers API",
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.SchedulerSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.SchedulerStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.SchedulerSpec", "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1.SchedulerStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_pkg_apis_pilot_v1alpha1_SchedulerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SchedulerSpec defines the desired state of Scheduler",
+				Properties:  map[string]spec.Schema{},
+			},
+		},
+		Dependencies: []string{},
+	}
+}
+
+func schema_pkg_apis_pilot_v1alpha1_SchedulerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SchedulerStatus defines the observed state of Scheduler",
 				Properties:  map[string]spec.Schema{},
 			},
 		},
