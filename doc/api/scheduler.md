@@ -20,7 +20,7 @@ Scheduler describes common cronJobs requests
 | ----- | ----------- | ------ | -------- |
 | name | Unique request name | string | true |
 | method | Request method. One of ['get', 'post', 'put', 'patch', 'delete']. Default `post` | string | false |
-| scheduler | CronJob schedule. Example: `0 * * * *` | string | true |
+| schedule | CronJob schedule. Example: `0 * * * *` | string | true |
 | service | Service target | string | true |
 | port | Target http port. Default `80` | int32 | false |
 | path | Target http path | string | true |
