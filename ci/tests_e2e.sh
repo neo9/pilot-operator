@@ -9,7 +9,8 @@ fi
 namespace="test-e2e-$(git rev-parse --short HEAD)-$TRAVIS_BUILD_ID"
 
 kubectl create namespace $namespace
-operator-sdk test local ./test/e2e --namespace $namespace
+operator-sdk test local ./test/e2e/applicationv1alpha1 --namespace $namespace
+operator-sdk test local ./test/e2e/schedulerv1alpha1 --namespace $namespace
 exit_code=$?
 
 kubectl delete namespace $namespace
