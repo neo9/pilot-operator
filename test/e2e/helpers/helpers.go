@@ -1,13 +1,13 @@
 package helpers
 
 import (
-	"github.com/neo9/pilot-operator/test/e2e/applicationv1alpha1"
 	"github.com/operator-framework/operator-sdk/pkg/test"
+	"k8s.io/apimachinery/pkg/runtime"
 
 	"github.com/neo9/pilot-operator/pkg/apis"
+	"github.com/operator-framework/operator-sdk/pkg/test/e2eutil"
 	"testing"
 	"time"
-	"github.com/operator-framework/operator-sdk/pkg/test/e2eutil"
 )
 
 var (
@@ -18,9 +18,8 @@ var (
 	operatorName         = "pilot-operator"
 )
 
-func GetClusterContext(t *testing.T) (string, *test.TestCtx) {
-	sampleList := applicationv1alpha1.GetSampleList()
-	crdError := test.AddToFrameworkScheme(apis.AddToScheme, &sampleList)
+func GetClusterContext(t *testing.T, obj runtime.Object) (string, *test.TestCtx) {
+	crdError := test.AddToFrameworkScheme(apis.AddToScheme, obj)
 	if crdError != nil {
 		t.Fatalf("failed to add custom resource scheme to framework: %v", crdError)
 	}

@@ -37,6 +37,7 @@ spec:
                 properties:
                   name:
                     type: string
+                    pattern: '[a-z]([-a-z0-9]*[a-z0-9])?'
                   schedule:
                     type: string
                     pattern: '^(\d+|\*)(/\d+)?(\s+(\d+|\*)(/\d+)?){4}$'

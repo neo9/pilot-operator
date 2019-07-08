@@ -1,4 +1,4 @@
-package e2e
+package schedulerv1alpha1
 
 import (
 	"testing"

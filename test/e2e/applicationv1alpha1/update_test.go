@@ -1,4 +1,4 @@
-package e2e
+package applicationv1alpha1
 
 import (
 	"context"
@@ -8,23 +8,23 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/test"
 	"github.com/operator-framework/operator-sdk/pkg/test/e2eutil"
 
-	"github.com/neo9/pilot-operator/test/e2e/applicationv1alpha1"
-	"github.com/neo9/pilot-operator/test/e2e/helpers"
-	"k8s.io/apimachinery/pkg/types"
-	appsv1 "k8s.io/api/apps/v1"
-	"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
 	"errors"
+	"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
+	"github.com/neo9/pilot-operator/test/e2e/helpers"
+	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/apimachinery/pkg/types"
 )
 
 func TestSimpleUpdate(t *testing.T) {
-	namespace, ctx := helpers.GetClusterContext(t)
+	list := getSampleList()
+	namespace, ctx := helpers.GetClusterContext(t, &list)
 	defer ctx.Cleanup()
 
 	// get global framework variables
 	f := test.Global
 	version := "1.16.0"
 	targetVersion := "1.17.0"
-	application := applicationv1alpha1.GetSampleNginxApplication(namespace, version)
+	application := getSampleNginxApplication(namespace, version)
 	err := f.Client.Create(context.TODO(), &application, &test.CleanupOptions{
 		TestContext: ctx,
 		Timeout: helpers.Timeout,

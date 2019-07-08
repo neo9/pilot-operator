@@ -1,4 +1,4 @@
-package e2e
+package applicationv1alpha1
 
 import (
 	"context"
@@ -8,17 +8,17 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/test"
 	"github.com/operator-framework/operator-sdk/pkg/test/e2eutil"
 
-	"github.com/neo9/pilot-operator/test/e2e/applicationv1alpha1"
 	"github.com/neo9/pilot-operator/test/e2e/helpers"
 )
 
 func TestSimpleWeb(t *testing.T) {
-	namespace, ctx := helpers.GetClusterContext(t)
+	list := getSampleList()
+	namespace, ctx := helpers.GetClusterContext(t, &list)
 	defer ctx.Cleanup()
 
 	// get global framework variables
 	f := test.Global
-	application := applicationv1alpha1.GetSampleWebApplication(namespace)
+	application := getSampleWebApplication(namespace)
 	err := f.Client.Create(context.TODO(), &application, &test.CleanupOptions{
 		TestContext: ctx,
 		Timeout: helpers.Timeout,

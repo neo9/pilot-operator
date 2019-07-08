@@ -5,13 +5,13 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func GetSampleList() v1alpha1.ApplicationList {
+func getSampleList() v1alpha1.ApplicationList {
 	return v1alpha1.ApplicationList{
 		TypeMeta: getTypeMeta(),
 	}
 }
 
-func GetSampleWebApplication(namespace string) v1alpha1.Application {
+func getSampleWebApplication(namespace string) v1alpha1.Application {
 	return v1alpha1.Application{
 		TypeMeta: getTypeMeta(),
 		ObjectMeta: metav1.ObjectMeta{
@@ -29,7 +29,7 @@ func GetSampleWebApplication(namespace string) v1alpha1.Application {
 	}
 }
 
-func GetSampleNginxApplication(namespace string, version string) v1alpha1.Application {
+func getSampleNginxApplication(namespace string, version string) v1alpha1.Application {
 	return v1alpha1.Application{
 		TypeMeta: getTypeMeta(),
 		ObjectMeta: metav1.ObjectMeta{
