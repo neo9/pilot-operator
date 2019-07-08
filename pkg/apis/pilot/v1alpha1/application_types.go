@@ -31,8 +31,8 @@ type ApplicationResources struct {
 }
 
 type ApplicationService struct {
-	Port int32 `json:"port"`
-	TargetPort int32 `json:"targetPort"`
+	Port int32 `json:"port,omitempty"`
+	TargetPort int32 `json:"targetPort,omitempty"`
 }
 
 // ApplicationSpec defines the desired state of Application
@@ -41,15 +41,15 @@ type ApplicationService struct {
 // Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 // Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
 type ApplicationSpec struct {
-	Replicas int32 `json:"replicas"`
+	Replicas int32 `json:"replicas,omitempty"`
 	Type ApplicationType `json:"type"`
 	Repository string `json:"repository"`
-	Tag string `json:"tag"`
-	InitTag string `json:"initTag"`
-	Service ApplicationService `json:"service"`
-	Resources ApplicationResources `json:"resources"`
-	HealthCheck ApplicationHealthCheck `json:"healthCheck"`
-	Pod ApplicationPod `json:"pod"`
+	Tag string `json:"tag,omitempty"`
+	InitTag string `json:"initTag,omitempty"`
+	Service ApplicationService `json:"service,omitempty"`
+	Resources ApplicationResources `json:"resources,omitempty"`
+	HealthCheck ApplicationHealthCheck `json:"healthCheck,omitempty"`
+	Pod ApplicationPod `json:"pod,omitempty"`
 }
 
 // ApplicationStatus defines the observed state of Application

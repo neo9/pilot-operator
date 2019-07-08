@@ -33,8 +33,6 @@ spec:
               properties:
                 path:
                   type: string
-              required:
-              - path
               type: object
             initTag:
               type: string
@@ -51,9 +49,9 @@ spec:
                     - name
                     - key
                     type: object
-                  type: array
-              required:
-              - secrets
+                  anyOf:
+                    - type: null
+                    - type: array
               type: object
             replicas:
               format: int32
@@ -66,9 +64,6 @@ spec:
                   type: string
                 memory:
                   type: string
-              required:
-              - memory
-              - cpu
               type: object
             service:
               properties:
@@ -78,24 +73,14 @@ spec:
                 targetPort:
                   format: int32
                   type: integer
-              required:
-              - port
-              - targetPort
               type: object
             tag:
               type: string
             type:
               type: string
           required:
-          - replicas
           - type
           - repository
-          - tag
-          - initTag
-          - service
-          - resources
-          - healthCheck
-          - pod
           type: object
         status:
           type: object
