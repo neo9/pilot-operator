@@ -20,6 +20,7 @@ Application describes a common JAVA, NodeJS or Web application
 | resources | Application resources configuration | *[ApplicationResources](#applicationResources) | false |
 | healthCheck | Application health check configuration | *[ApplicationHealthCheck](#applicationHealthCheck) | false |
 | pod | Application pod configuration | *[ApplicationPod](#applicationPod) | false |
+| labels | Application additional labels | *map[string]string | `{}` |
 
 ## ApplicationService
 
@@ -73,3 +74,4 @@ To be defined
 
 | Field | Description | Scheme | Required |
 | ----- | ----------- | ------ | -------- |
+

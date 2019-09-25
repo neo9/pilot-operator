@@ -31,7 +31,7 @@ func getDeployment(application *pilotv1alpha1.Application) *appsv1.Deployment {
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      application.Name,
 			Namespace: application.ObjectMeta.Namespace,
-			Labels:    labels,
+			Labels:    getMergedLabels(labels, application.Labels),
 		},
 		Spec: appsv1.DeploymentSpec{
 			Replicas: &replicas,

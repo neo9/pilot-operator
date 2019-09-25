@@ -50,6 +50,7 @@ type ApplicationSpec struct {
 	Resources ApplicationResources `json:"resources,omitempty"`
 	HealthCheck ApplicationHealthCheck `json:"healthCheck,omitempty"`
 	Pod ApplicationPod `json:"pod,omitempty"`
+	Labels map[string]string `json:"labels,omitempty"`
 }
 
 // ApplicationStatus defines the observed state of Application
