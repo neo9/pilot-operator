@@ -11,8 +11,6 @@ import (
 	"errors"
 	"github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
 	"github.com/neo9/pilot-operator/test/e2e/helpers"
-	appsv1 "k8s.io/api/apps/v1"
-	"k8s.io/apimachinery/pkg/types"
 )
 
 func TestSimpleUpdate(t *testing.T) {
@@ -68,14 +66,28 @@ func TestSimpleUpdate(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	application.Spec.HealthCheck.Path = "/"
+	err = f.Client.Update(context.TODO(), &application)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = e2eutil.WaitForDeployment(t, f.KubeClient, namespace, application.Name, 1, time.Second*5, time.Second*30)
+	if err != nil {
+		t.Fatal(err)
+	}
+	deployment := getDeployment(f, application)
+	if deployment.Spec.Template.Spec.Containers[0].LivenessProbe.HTTPGet.Path != "/" {
+		t.Fatal(errors.New("health check was not updated"))
+	}
+
 
 	ctx.Cleanup()
 }
 
 
+
 func checkVersion(f *test.Framework, application v1alpha1.Application, version string) error {
-	deployment := &appsv1.Deployment{}
-	f.Client.Get(context.TODO(), types.NamespacedName{Name: application.Name, Namespace: application.Namespace}, deployment)
+	deployment := getDeployment(f, application)
 	expectedImage := "nginx:" + version
 	if deployment.Spec.Template.Spec.Containers[0].Image != expectedImage {
 		return errors.New("Image should not have been updated to " + expectedImage)
