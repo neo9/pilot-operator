@@ -54,8 +54,14 @@ func isDeploymentUpdated(current *appsv1.Deployment, application *pilotv1alpha1.
 	}
 
 	if !reflect.DeepEqual(stateContainer.Env, currentContainer.Env) {
-		reqLogger.Info("Containers env variables differs")
+		reqLogger.Info("Containers env variables differ")
 		currentContainer.Env = stateContainer.Env
+		stateModifications++
+	}
+
+	if !reflect.DeepEqual(state.Labels, current.Labels) {
+		reqLogger.Info("Labels differ")
+		current.Labels = state.Labels
 		stateModifications++
 	}
 

@@ -17,6 +17,12 @@ func isServiceUpdated(current *v1.Service, application *pilotv1alpha1.Applicatio
 		stateModifications++
 	}
 
+	if !reflect.DeepEqual(state.Labels, current.Labels) {
+		reqLogger.Info("Labels differ")
+		current.Labels = state.Labels
+		stateModifications++
+	}
+
 	return stateModifications > 0
 }
 

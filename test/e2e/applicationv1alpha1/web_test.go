@@ -53,7 +53,7 @@ func TestLabels(t *testing.T) {
 	// get global framework variables
 	f := test.Global
 	application := getSampleNginxApplication(namespace, "1.16.0")
-	application.SetLabels(map[string]string{"prometheus": "true"})
+	application.Spec.Labels = map[string]string{"prometheus": "true"}
 	err := f.Client.Create(context.TODO(), &application, &test.CleanupOptions{
 		TestContext:   ctx,
 		Timeout:       helpers.Timeout,
@@ -75,7 +75,7 @@ func TestLabels(t *testing.T) {
 		t.Fatal(errors.New("Labels do not match"))
 	}
 
-	application.SetLabels(map[string]string{"prometheus": "false"})
+	application.Spec.Labels = map[string]string{"prometheus": "false"}
 	err = f.Client.Update(context.TODO(), &application)
 	if err != nil {
 		t.Fatal(err)
@@ -94,6 +94,5 @@ func TestLabels(t *testing.T) {
 	if reflect.DeepEqual(expectedLabels, deployment.Labels) {
 		t.Fatal(errors.New("Labels do not match after update"))
 	}
-
 }
 

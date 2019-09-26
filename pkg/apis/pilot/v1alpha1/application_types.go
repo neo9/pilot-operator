@@ -37,9 +37,6 @@ type ApplicationService struct {
 
 // ApplicationSpec defines the desired state of Application
 // +k8s:openapi-gen=true
-// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
-// Add custom validation using kubebuilder tags: https://book-v1.book.kubebuilder.io/beyond_basics/generating_crd.html
 type ApplicationSpec struct {
 	Replicas int32 `json:"replicas,omitempty"`
 	Type ApplicationType `json:"type"`
@@ -52,6 +49,7 @@ type ApplicationSpec struct {
 	Pod ApplicationPod `json:"pod,omitempty"`
 	Labels map[string]string `json:"labels,omitempty"`
 }
+
 
 // ApplicationStatus defines the observed state of Application
 // +k8s:openapi-gen=true

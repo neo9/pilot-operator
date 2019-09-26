@@ -10,9 +10,9 @@ Kubernetes operator to manage and deploy Java, NodeJS and web applications.
 
 ## Requirements
 
-- Kubernetes 1.12.x (other versions are not tested yet)
+- Kubernetes 1.14.x / 1.13.x (other versions are not tested yet)
 - Go 1.12.x
-- Operator SDK v0.8.1
+- Operator SDK v0.10.0
 
 ## Local
 

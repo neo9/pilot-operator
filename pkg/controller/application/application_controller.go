@@ -2,9 +2,10 @@ package application
 
 import (
 	"context"
-	v1 "k8s.io/api/core/v1"
 
 	pilotv1alpha1 "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
+	appsv1 "k8s.io/api/apps/v1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -14,7 +15,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 	"sigs.k8s.io/controller-runtime/pkg/source"
-	appsv1 "k8s.io/api/apps/v1"
 )
 
 var log = logf.Log.WithName("controller_application")
@@ -80,8 +80,6 @@ type ReconcileApplication struct {
 	scheme *runtime.Scheme
 }
 
-// Reconcile reads that state of the cluster for a Application object and makes changes based on the state read
-// and what is in the Application.Spec
 // Note:
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
@@ -116,3 +114,4 @@ func (r *ReconcileApplication) Reconcile(request reconcile.Request) (reconcile.R
 
 	return result, nil
 }
+
