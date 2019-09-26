@@ -24,7 +24,7 @@ func getService(application *pilotv1alpha1.Application) *v1.Service {
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      application.Name,
 			Namespace: application.ObjectMeta.Namespace,
-			Labels:    getMergedLabels(labels, application.Labels),
+			Labels:    getMergedLabels(labels, application.Spec.Labels),
 		},
 		Spec: v1.ServiceSpec{
 			Type: v1.ServiceTypeClusterIP,

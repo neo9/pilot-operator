@@ -1,11 +1,11 @@
 FROM registry.access.redhat.com/ubi7/ubi-minimal:latest
 
-ENV OPERATOR=/usr/local/bin/pilot-operator \
+ENV OPERATOR=/usr/local/bin/app-operator \
     USER_UID=1001 \
-    USER_NAME=pilot-operator
+    USER_NAME=app-operator
 
 # install operator binary
-COPY build/_output/bin/pilot-operator ${OPERATOR}
+COPY build/_output/bin/app-operator ${OPERATOR}
 
 COPY build/bin /usr/local/bin
 RUN  /usr/local/bin/user_setup

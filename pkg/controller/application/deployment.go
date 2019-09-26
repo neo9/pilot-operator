@@ -1,6 +1,7 @@
 package application
 
 import (
+	"fmt"
 	pilotv1alpha1 "github.com/neo9/pilot-operator/pkg/apis/pilot/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -11,6 +12,7 @@ import (
 )
 
 func (r *ReconcileApplication) newDeploymentForCR(application *pilotv1alpha1.Application) *appsv1.Deployment {
+	fmt.Printf("HERREEE WITH: %v|", application.Labels)
 	dep := getDeployment(application)
 	controllerutil.SetControllerReference(application, dep, r.scheme)
 	return dep
@@ -27,11 +29,13 @@ func getDeployment(application *pilotv1alpha1.Application) *appsv1.Deployment {
 		replicas = application.Spec.Replicas
 	}
 
+	fmt.Printf("HERREEE WITH: %v|%v|", labels, application.Spec.Labels)
+
 	dep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      application.Name,
 			Namespace: application.ObjectMeta.Namespace,
-			Labels:    getMergedLabels(labels, application.Labels),
+			Labels:    getMergedLabels(labels, application.Spec.Labels),
 		},
 		Spec: appsv1.DeploymentSpec{
 			Replicas: &replicas,
