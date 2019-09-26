@@ -4,6 +4,11 @@ OPERATOR_SDK_VERSION=v0.8.1
 
 set -e
 
+cat <<EOF > ~/.hgrc
+[hostsecurity]
+disabletls10warning = true
+EOF
+
 curl -OJL https://github.com/operator-framework/operator-sdk/releases/download/${OPERATOR_SDK_VERSION}/operator-sdk-${OPERATOR_SDK_VERSION}-x86_64-linux-gnu
 
 curl -OJL https://github.com/operator-framework/operator-sdk/releases/download/${OPERATOR_SDK_VERSION}/operator-sdk-${OPERATOR_SDK_VERSION}-x86_64-linux-gnu.asc
